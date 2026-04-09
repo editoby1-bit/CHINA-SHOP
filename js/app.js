@@ -219,7 +219,7 @@
               </div>
             </div>
             <div class="hero-art">
-              <img src="https://picsum.photos/seed/tech-gadgets-store/900/700" alt="China Shop hero" />
+              <img src="https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?w=900&h=700&fit=crop&q=80" alt="China Shop products" />
             </div>
           </div>
         </div>
@@ -277,7 +277,7 @@
     const products = getProducts();
     const shops = getShops();
     const urlCategory = query.category || 'All';
-    if (urlCategory && state.marketplaceFilter.category === 'All' && urlCategory !== 'All') state.marketplaceFilter.category = urlCategory;
+    if (urlCategory) state.marketplaceFilter.category = urlCategory;
 
     const searchQ = (query.q || '').trim().toLowerCase();
     const filtered = products.filter((product) => {
@@ -796,6 +796,7 @@
   }
 
   function renderApp() {
+    window.scrollTo(0, 0);
     const route = getRoute();
     const app = document.getElementById('app');
 
