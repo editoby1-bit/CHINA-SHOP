@@ -15,7 +15,7 @@
   const CATEGORIES = ['Electronics','Gadgets','Kitchen','Fashion','Home & Living','Beauty'];
   const CAT_ICONS  = { Electronics:'💻', Gadgets:'📱', Kitchen:'🍳', Fashion:'👗', 'Home & Living':'🛋️', Beauty:'✨' };
 
-  function ₦(n) {
+  function naira(n) {
     return '₦' + new Intl.NumberFormat('en-NG').format(n);
   }
   function esc(s) {
@@ -124,7 +124,7 @@
           <a href="#product/${p.id}">
             <h3 class="product-name">${esc(p.name)}</h3>
           </a>
-          <div class="product-price">${₦(p.price)}</div>
+          <div class="product-price">${naira(p.price)}</div>
           <div class="product-rating">${stars(p.rating)}</div>
           <div class="product-actions">
             <a class="btn btn-ghost btn-sm" href="#product/${p.id}">View</a>
@@ -334,7 +334,7 @@
               <div class="filter-group">
                 <div class="filter-row">
                   <label class="label" style="margin:0">Max Price</label>
-                  <span class="filter-val" id="fp-val">${₦(state.filter.maxPrice)}</span>
+                  <span class="filter-val" id="fp-val">${naira(state.filter.maxPrice)}</span>
                 </div>
                 <input id="fp" type="range" min="0" max="500000" step="5000" value="${state.filter.maxPrice}" />
               </div>
@@ -436,7 +436,7 @@
             <div class="product-detail-body">
               <span class="product-shop">${esc(shop?.name||'China Shop')}</span>
               <h1 class="product-detail-title">${esc(p.name)}</h1>
-              <div class="product-detail-price">${₦(p.price)}</div>
+              <div class="product-detail-price">${naira(p.price)}</div>
               <div class="product-rating" style="font-size:0.92rem;margin-bottom:1rem">${stars(p.rating)}</div>
               <p class="product-detail-desc">${esc(p.description)}</p>
               <table class="spec-table">
@@ -557,7 +557,7 @@
                   <div>
                     <div class="cart-item-name">${esc(i.product.name)}</div>
                     <div class="cart-item-shop">${esc(shopById(i.product.shopId)?.name||'China Shop')}</div>
-                    <div class="cart-item-price">${₦(i.product.price)} each</div>
+                    <div class="cart-item-price">${naira(i.product.price)} each</div>
                     <div class="cart-qty">
                       <button data-action="dec" data-id="${i.product.id}">−</button>
                       <span>${i.quantity}</span>
@@ -565,16 +565,16 @@
                     </div>
                   </div>
                   <div>
-                    <div class="cart-item-total">${₦(i.product.price*i.quantity)}</div>
+                    <div class="cart-item-total">${naira(i.product.price*i.quantity)}</div>
                     <button class="remove-btn" data-action="rm" data-id="${i.product.id}">Remove</button>
                   </div>
                 </div>`).join('')}
             </div>
             <aside class="card order-summary">
               <h3>Order Summary</h3>
-              <div class="summary-row"><span>Subtotal</span><strong>${₦(subtotal)}</strong></div>
-              <div class="summary-row"><span>Delivery fee</span><strong>${₦(DELIVERY)}</strong></div>
-              <div class="summary-row total"><span>Total</span><span>${₦(subtotal+DELIVERY)}</span></div>
+              <div class="summary-row"><span>Subtotal</span><strong>${naira(subtotal)}</strong></div>
+              <div class="summary-row"><span>Delivery fee</span><strong>${naira(DELIVERY)}</strong></div>
+              <div class="summary-row total"><span>Total</span><span>${naira(subtotal+DELIVERY)}</span></div>
               <a class="btn btn-primary btn-full mt-3" href="#checkout">Proceed to Checkout →</a>
               <a class="btn btn-ghost btn-full mt-2" href="#marketplace">Continue Shopping</a>
             </aside>
@@ -614,10 +614,10 @@
             </div>
             <aside class="card order-summary">
               <h3>Your Order</h3>
-              ${items.map(i => `<div class="summary-row"><span>${esc(i.product.name)} × ${i.quantity}</span><strong>${₦(i.product.price*i.quantity)}</strong></div>`).join('')}
-              <div class="summary-row"><span>Subtotal</span><strong>${₦(subtotal)}</strong></div>
-              <div class="summary-row"><span>Delivery</span><strong>${₦(DELIVERY)}</strong></div>
-              <div class="summary-row total"><span>Total</span><span>${₦(subtotal+DELIVERY)}</span></div>
+              ${items.map(i => `<div class="summary-row"><span>${esc(i.product.name)} × ${i.quantity}</span><strong>${naira(i.product.price*i.quantity)}</strong></div>`).join('')}
+              <div class="summary-row"><span>Subtotal</span><strong>${naira(subtotal)}</strong></div>
+              <div class="summary-row"><span>Delivery</span><strong>${naira(DELIVERY)}</strong></div>
+              <div class="summary-row total"><span>Total</span><span>${naira(subtotal+DELIVERY)}</span></div>
             </aside>
           </div>
         </div>
@@ -707,7 +707,7 @@
                           <tr>
                             <td style="font-weight:600">${esc(p.name)}</td>
                             <td>${esc(p.category)}</td>
-                            <td style="color:var(--red);font-weight:700">${₦(p.price)}</td>
+                            <td style="color:var(--red);font-weight:700">${naira(p.price)}</td>
                             <td>★ ${p.rating.toFixed(1)}</td>
                             <td style="display:flex;gap:0.4rem">
                               <button class="btn btn-ghost btn-sm vedit-btn" data-id="${p.id}">Edit</button>
@@ -728,7 +728,7 @@
                           <tr>
                             <td style="font-weight:600">${esc(o.buyerName)}</td>
                             <td style="max-width:200px">${esc(o.items.filter(i=>i.shopId==='shenzhentech').map(i=>`${i.name} ×${i.quantity}`).join(', '))}</td>
-                            <td style="color:var(--red);font-weight:700">${₦(o.total)}</td>
+                            <td style="color:var(--red);font-weight:700">${naira(o.total)}</td>
                             <td>
                               <select class="select" style="width:auto;padding:0.35rem 0.5rem;font-size:0.8rem" data-oid="${o.id}">
                                 ${['New','Processing','Shipped','Delivered'].map(s=>`<option ${o.status===s?'selected':''}>${s}</option>`).join('')}
@@ -778,12 +778,12 @@
           <div class="stats-grid mb-3">
             <div class="card stat-card">
               <div class="stat-label">Total Revenue</div>
-              <div class="stat-value red">${₦(revenue)}</div>
+              <div class="stat-value red">${naira(revenue)}</div>
               <div class="stat-note">All orders combined</div>
             </div>
             <div class="card stat-card">
               <div class="stat-label">Commission Earned</div>
-              <div class="stat-value">${₦(Math.round(commission))}</div>
+              <div class="stat-value">${naira(Math.round(commission))}</div>
               <div class="stat-note">12% of order value</div>
             </div>
             <div class="card stat-card">
@@ -803,7 +803,7 @@
                     <tr>
                       <td style="font-weight:600">${esc(o.buyerName)}</td>
                       <td style="max-width:220px;color:var(--gray-500)">${esc(o.items.map(i=>`${i.name} ×${i.quantity}`).join(', '))}</td>
-                      <td style="color:var(--red);font-weight:700">${₦(o.total)}</td>
+                      <td style="color:var(--red);font-weight:700">${naira(o.total)}</td>
                       <td><span class="status-pill ${o.status==='New'?'s-new':o.status==='Processing'?'s-processing':o.status==='Shipped'?'s-shipped':'s-delivered'}">${o.status}</span></td>
                       <td>${esc(o.paymentMethod)}</td>
                     </tr>`).join('')}
@@ -822,7 +822,7 @@
                     ${requests.map(r => `
                       <tr>
                         <td style="max-width:200px">${esc(r.description)}</td>
-                        <td style="color:var(--red);font-weight:600">${₦(r.budget)}</td>
+                        <td style="color:var(--red);font-weight:600">${naira(r.budget)}</td>
                         <td>${r.quantity}</td>
                         <td>${esc(r.urgency)}</td>
                         <td><span class="status-pill s-new">${esc(r.status)}</span></td>
@@ -898,7 +898,7 @@
       if (fp) {
         fp.oninput = () => {
           state.filter.maxPrice = Number(fp.value);
-          document.getElementById('fp-val').textContent = ₦(state.filter.maxPrice);
+          document.getElementById('fp-val').textContent = naira(state.filter.maxPrice);
         };
         fp.onchange = () => { state.filter.maxPrice = Number(fp.value); renderApp(); };
       }
