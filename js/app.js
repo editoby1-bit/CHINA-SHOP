@@ -219,7 +219,7 @@
               </div>
             </div>
             <div class="hero-art">
-              <img src="https://picsum.photos/seed/china-shop-hero/900/700" alt="China Shop hero" />
+              <img src="https://picsum.photos/seed/tech-gadgets-store/900/700" alt="China Shop hero" />
             </div>
           </div>
         </div>
