@@ -162,7 +162,7 @@
               </div>
             </div>
             <div class="hero-image-wrap">
-              <img src="https://picsum.photos/id/684/800/600" alt="China Shop" />
+              <img src="https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?w=900&h=700&fit=crop&q=80" alt="China Shop" />
               <div class="hero-image-badge">
                 <div class="badge-icon">🚀</div>
                 <div class="badge-text">
