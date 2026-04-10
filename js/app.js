@@ -8,7 +8,8 @@
     search: '',
     filter: { category: 'All', maxPrice: 500000, minRating: 0, shop: 'All' },
     cartPulse: false,
-    shopTab: {}
+    shopTab: {},
+    _fi: false
   };
 
   const DELIVERY = 2500;
@@ -301,9 +302,13 @@
 
   // ─── MARKETPLACE ──────────────────────────────
   function marketplacePage(query) {
-    // Always sync category from URL — fixes the category filter bug
-    state.filter.category = query.category || 'All';
-    const searchQ = (query.q || '').trim().toLowerCase();
+    // Only sync from URL when arriving fresh (not during internal filter changes).
+    // state._fi (filterInteraction) is set true by filter handlers so we skip URL sync.
+    if (!state._fi) {
+      if (query.category !== undefined) state.filter.category = query.category || 'All';
+    }
+    state._fi = false;
+    const searchQ = (query.q || state.search || '').trim().toLowerCase();
     const all = D.getProducts();
     const filtered = all.filter(p => {
       const shop = shopById(p.shopId);
@@ -918,18 +923,24 @@
       const fr = document.getElementById('fr');
       const fs = document.getElementById('fs');
       const reset = document.getElementById('reset-btn');
-      if (fc) fc.onchange = () => { state.filter.category = fc.value; renderApp(); };
+
+      function filterRender() { state._fi = true; renderApp(); }
+
+      if (fc) fc.onchange = () => { state.filter.category = fc.value; filterRender(); };
       if (fp) {
         fp.oninput = () => {
           state.filter.maxPrice = Number(fp.value);
-          document.getElementById('fp-val').textContent = naira(state.filter.maxPrice);
+          const lbl = document.getElementById('fp-val');
+          if (lbl) lbl.textContent = naira(state.filter.maxPrice);
         };
-        fp.onchange = () => { state.filter.maxPrice = Number(fp.value); renderApp(); };
+        fp.onchange = () => { state.filter.maxPrice = Number(fp.value); filterRender(); };
       }
-      if (fr) fr.onchange = () => { state.filter.minRating = Number(fr.value); renderApp(); };
-      if (fs) fs.onchange = () => { state.filter.shop = fs.value; renderApp(); };
+      if (fr) fr.onchange = () => { state.filter.minRating = Number(fr.value); filterRender(); };
+      if (fs) fs.onchange = () => { state.filter.shop = fs.value; filterRender(); };
       if (reset) reset.onclick = () => {
         state.filter = { category: 'All', maxPrice: 500000, minRating: 0, shop: 'All' };
+        state.search = '';
+        state._fi = false;
         R.navigate('marketplace');
       };
     }
