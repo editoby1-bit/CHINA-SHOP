@@ -436,20 +436,44 @@
             <div class="product-detail-body">
               <span class="product-shop">${esc(shop?.name||'China Shop')}</span>
               <h1 class="product-detail-title">${esc(p.name)}</h1>
-              <div class="product-detail-price">${naira(p.price)}</div>
+
+              <div class="price-block">
+                <div class="product-detail-price" id="live-price">${naira(p.price)}</div>
+                <div class="price-per-unit" id="price-note">per unit</div>
+              </div>
+
+              <div class="wholesale-tiers">
+                <div class="tier-label">Bulk pricing</div>
+                <div class="tiers-row">
+                  <div class="tier"><span class="tier-qty">1–9 units</span><span class="tier-price">Full price</span></div>
+                  <div class="tier tier-highlight"><span class="tier-qty">10–49 units</span><span class="tier-price">10% off</span></div>
+                  <div class="tier tier-best"><span class="tier-qty">50+ units</span><span class="tier-price">20% off</span></div>
+                </div>
+              </div>
+
               <div class="product-rating" style="font-size:0.92rem;margin-bottom:1rem">${stars(p.rating)}</div>
               <p class="product-detail-desc">${esc(p.description)}</p>
               <table class="spec-table">
                 ${Object.entries(p.specs).map(([k,v]) => `<tr><td>${esc(k)}</td><td>${esc(v)}</td></tr>`).join('')}
               </table>
-              <div class="flex items-center gap-2 mt-3" style="flex-wrap:wrap;">
+
+              <div class="qty-row mt-3">
                 <div class="qty-control">
                   <button id="qty-minus" type="button">−</button>
-                  <span id="qty-val">1</span>
+                  <input id="qty-input" type="number" min="1" value="1" />
                   <button id="qty-plus" type="button">+</button>
                 </div>
                 <button class="btn btn-primary" id="atc-btn" data-id="${p.id}">Add to Cart</button>
                 <button class="btn btn-dark" id="buy-btn" data-id="${p.id}">Buy Now</button>
+              </div>
+
+              <div class="bulk-nudge" id="bulk-nudge">
+                <span class="bulk-nudge-icon">📦</span>
+                <div>
+                  <strong>Want to buy in bulk?</strong>
+                  <span>For orders of 20+ units, submit a Special Request and we'll give you a custom quote.</span>
+                </div>
+                <a class="btn btn-outline btn-sm" href="#request">Request a Quote →</a>
               </div>
             </div>
           </div>
@@ -918,18 +942,73 @@
       };
     });
 
-    // Product detail qty
+    // Product detail qty + wholesale logic
     if (route.page === 'product') {
-      let qty = 1;
-      const val = document.getElementById('qty-val');
-      const minus = document.getElementById('qty-minus');
-      const plus  = document.getElementById('qty-plus');
+      const input  = document.getElementById('qty-input');
+      const minus  = document.getElementById('qty-minus');
+      const plus   = document.getElementById('qty-plus');
       const atcBtn = document.getElementById('atc-btn');
       const buyBtn = document.getElementById('buy-btn');
-      if (minus) minus.onclick = () => { qty = Math.max(1, qty-1); val.textContent = qty; };
-      if (plus)  plus.onclick  = () => { qty++; val.textContent = qty; };
-      if (atcBtn) atcBtn.onclick = () => addToCart(atcBtn.dataset.id, qty);
-      if (buyBtn) buyBtn.onclick = () => { addToCart(buyBtn.dataset.id, qty); R.navigate('checkout'); };
+      const livePrice = document.getElementById('live-price');
+      const priceNote = document.getElementById('price-note');
+      const nudge  = document.getElementById('bulk-nudge');
+
+      // Get base price from the product currently displayed
+      const currentProd = prodById(route.params.id);
+      const basePrice = currentProd ? currentProd.price : 0;
+
+      function discount(q) {
+        if (q >= 50) return 0.20;
+        if (q >= 10) return 0.10;
+        return 0;
+      }
+
+      function updateUI() {
+        const q = parseInt(input.value) || 1;
+        const d = discount(q);
+        const unitPrice = Math.round(basePrice * (1 - d));
+        const totalPrice = unitPrice * q;
+
+        // Update live price display
+        if (livePrice) livePrice.textContent = naira(unitPrice);
+        if (priceNote) {
+          if (d > 0) {
+            priceNote.innerHTML = `per unit &nbsp;<span style="background:#ecfdf5;color:#059669;padding:2px 8px;border-radius:4px;font-size:0.78rem;font-weight:700;">${d*100}% off applied</span>`;
+          } else {
+            priceNote.textContent = q > 1 ? `per unit — ${naira(totalPrice)} total` : 'per unit';
+          }
+        }
+
+        // Highlight active tier
+        document.querySelectorAll('.tier').forEach(t => t.classList.remove('tier-active'));
+        const tiers = document.querySelectorAll('.tier');
+        if (q >= 50 && tiers[2]) tiers[2].classList.add('tier-active');
+        else if (q >= 10 && tiers[1]) tiers[1].classList.add('tier-active');
+        else if (tiers[0]) tiers[0].classList.add('tier-active');
+
+        // Show bulk nudge for 20+ units
+        if (nudge) nudge.style.display = q >= 20 ? 'flex' : 'none';
+      }
+
+      function setQty(val) {
+        const q = Math.max(1, parseInt(val) || 1);
+        if (input) input.value = q;
+        updateUI();
+      }
+
+      if (minus) minus.onclick = () => setQty((parseInt(input.value)||1) - 1);
+      if (plus)  plus.onclick  = () => setQty((parseInt(input.value)||1) + 1);
+      if (input) {
+        input.oninput = () => updateUI();
+        input.onblur  = () => setQty(input.value);
+        input.onkeydown = e => { if(e.key==='ArrowUp') { e.preventDefault(); setQty((parseInt(input.value)||1)+1); } if(e.key==='ArrowDown') { e.preventDefault(); setQty((parseInt(input.value)||1)-1); } };
+      }
+
+      // Init
+      updateUI();
+
+      if (atcBtn) atcBtn.onclick = () => addToCart(atcBtn.dataset.id, parseInt(input.value)||1);
+      if (buyBtn) buyBtn.onclick = () => { addToCart(buyBtn.dataset.id, parseInt(input.value)||1); R.navigate('checkout'); };
     }
 
     // Hero search

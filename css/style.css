@@ -1103,3 +1103,106 @@ input[type="range"] {
   .hero-title { font-size: 1.9rem; }
   .footer-grid { grid-template-columns: 1fr; }
 }
+
+/* ─── WHOLESALE TIERS ────────────────────────── */
+.price-block { margin-bottom: 1rem; }
+.price-per-unit {
+  font-size: 0.82rem; color: var(--gray-500);
+  margin-top: 0.2rem; line-height: 1.5;
+}
+.wholesale-tiers {
+  background: var(--gray-50);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0.85rem 1rem;
+  margin-bottom: 1.1rem;
+}
+.tier-label {
+  font-size: 0.7rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.08em;
+  color: var(--gray-500); margin-bottom: 0.6rem;
+}
+.tiers-row {
+  display: flex; gap: 0.5rem;
+}
+.tier {
+  flex: 1; padding: 0.55rem 0.65rem;
+  border-radius: var(--radius-sm);
+  border: 1.5px solid var(--border);
+  background: var(--white);
+  text-align: center;
+  transition: all 0.15s;
+}
+.tier-qty {
+  display: block; font-size: 0.72rem;
+  color: var(--gray-500); margin-bottom: 0.2rem;
+  font-weight: 600;
+}
+.tier-price {
+  display: block; font-size: 0.82rem;
+  font-weight: 700; color: var(--gray-700);
+}
+.tier-highlight .tier-price { color: #059669; }
+.tier-best .tier-price { color: var(--red); }
+.tier-active {
+  border-color: var(--red) !important;
+  background: var(--red-soft) !important;
+}
+.tier-active .tier-qty { color: var(--red); }
+.tier-active .tier-price { color: var(--red); }
+
+/* ─── QTY ROW ────────────────────────────────── */
+.qty-row {
+  display: flex; align-items: center;
+  gap: 0.75rem; flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+.qty-control {
+  display: inline-flex; align-items: center;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  overflow: hidden; flex-shrink: 0;
+}
+.qty-control button {
+  width: 36px; height: 40px;
+  background: var(--gray-100); border: none;
+  font-size: 1.15rem; font-weight: 700;
+  color: var(--gray-700); cursor: pointer;
+  transition: background 0.15s;
+  flex-shrink: 0;
+}
+.qty-control button:hover { background: var(--gray-300); }
+.qty-control input[type="number"] {
+  width: 56px; height: 40px;
+  border: none; border-left: 1.5px solid var(--border);
+  border-right: 1.5px solid var(--border);
+  text-align: center; font-weight: 700;
+  font-size: 0.95rem; font-family: inherit;
+  color: var(--gray-900); background: var(--white);
+  padding: 0;
+  -moz-appearance: textfield;
+}
+.qty-control input[type="number"]::-webkit-inner-spin-button,
+.qty-control input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; }
+.qty-control input[type="number"]:focus { outline: none; background: var(--red-soft); }
+
+/* ─── BULK NUDGE ─────────────────────────────── */
+.bulk-nudge {
+  display: none;
+  align-items: center; gap: 0.85rem;
+  padding: 0.85rem 1rem;
+  background: #fffbeb;
+  border: 1.5px solid #fcd34d;
+  border-radius: var(--radius);
+  margin-top: 0.5rem;
+  flex-wrap: wrap;
+}
+.bulk-nudge-icon { font-size: 1.4rem; flex-shrink: 0; }
+.bulk-nudge div {
+  flex: 1; min-width: 160px; font-size: 0.85rem;
+  line-height: 1.5; color: var(--gray-700);
+}
+.bulk-nudge strong {
+  display: block; font-weight: 700;
+  color: var(--gray-900); margin-bottom: 0.15rem;
+}
