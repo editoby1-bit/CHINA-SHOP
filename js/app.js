@@ -162,7 +162,7 @@
               </div>
             </div>
             <div class="hero-image-wrap">
-              <img src="https://placehold.co/800x600/1a1a2e/ffffff?text=China+Shop" alt="China Shop" />
+              <img src="https://picsum.photos/id/684/800/600" alt="China Shop" />
               <div class="hero-image-badge">
                 <div class="badge-icon">🚀</div>
                 <div class="badge-text">
