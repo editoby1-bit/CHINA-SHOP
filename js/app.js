@@ -941,7 +941,10 @@
         state.filter = { category: 'All', maxPrice: 500000, minRating: 0, shop: 'All' };
         state.search = '';
         state._fi = false;
-        R.navigate('marketplace');
+        // Can't use navigate() — hash may already be #marketplace so hashchange won't fire.
+        // Directly re-render instead.
+        renderApp();
+        renderNavbar();
       };
     }
 
